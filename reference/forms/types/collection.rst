@@ -226,10 +226,11 @@ and pass it as this option.
 options
 ~~~~~~~
 
-**type**: ``array`` **default**: ``array()``
+**type**: ``array`` or ``\Closure`` **default**: ``array()``
 
 This is the array that's passed to the form type specified in the `type`_
-option. For example, if you used the :doc:`choice </reference/forms/types/choice>`
+option. If the given type is a ``Closure``, the closure should return an array.
+For example, if you used the :doc:`choice </reference/forms/types/choice>`
 type as your `type`_ option (e.g. for a collection of drop-down menus), then
 you'd need to at least pass the ``choices`` option to the underlying type::
 
@@ -243,6 +244,19 @@ you'd need to at least pass the ``choices`` option to the underlying type::
                 'london'    => 'London',
             ),
         ),
+    ));
+
+You can use a closure when your options depend on the data that's going to be
+bound to the form. For example, if you wanted to disable an item in the
+collection depending on some condition::
+
+    $builder->add('notes', 'collection', array(
+        'type'   => 'text',
+        'options'  => function ($data) {
+            return array(
+                'disabled'  => $data->shouldBeDisabled(),
+            );
+        },
     ));
 
 allow_add
